@@ -3,6 +3,8 @@ class ClockCard extends HTMLElement {
 
     set hass(hass) {
         if (!this.content) {
+            config = this.config;
+            var clock_size = config.size ? config.size : 300;
             const card = document.createElement('ha-card');
             this.content = document.createElement('div');
             this.content.style.display = "flex";
@@ -10,7 +12,7 @@ class ClockCard extends HTMLElement {
             this.content.style.alignContent = "center";
             this.content.style.justifyContent = "center";
             this.content.style.padding = "5px";
-            this.content.innerHTML = `<canvas width="300px" height="300px"></canvas>`;
+            this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>`;
             card.appendChild(this.content);
             this.appendChild(card);
             var canvas = this.content.children[0];
@@ -18,7 +20,7 @@ class ClockCard extends HTMLElement {
             var radius = canvas.height / 2;
             ctx.translate(radius, radius);
             radius = radius * 0.90
-            config = this.config;
+            drawClock();
             setInterval(drawClock, 1000);
 
             function drawClock() {
@@ -64,9 +66,9 @@ class ClockCard extends HTMLElement {
             function drawTime(ctx, radius) {
                 var now = new Date();
                 var local_hour = now.getHours();
-                if(config && config.time_zone){
-                    try{
-                        var local_hour = parseInt(now.toLocaleString(navigator.language, {hour: '2-digit',   hour12: true, timeZone: config.time_zone }).substr(0,2));
+                if (config && config.time_zone) {
+                    try {
+                        var local_hour = parseInt(now.toLocaleString(navigator.language, { hour: '2-digit', hour12: true, timeZone: config.time_zone }).substr(0, 2));
                     }
                     catch{
                         console.log("Analog Clock: Invalid timezone")
@@ -85,12 +87,14 @@ class ClockCard extends HTMLElement {
                 minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
                 drawHand(ctx, minute, radius * 0.8, radius * 0.07);
                 // second
-                second = (second * Math.PI / 30);
-                drawHand(ctx, second, radius * 0.9, radius * 0.02);
+                if (!config.disable_seconds) {
+                    second = (second * Math.PI / 30);
+                    drawHand(ctx, second, radius * 0.9, radius * 0.02);
+                }
             }
 
             function drawHand(ctx, pos, length, width) {
-                ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
                 ctx.beginPath();
                 ctx.lineWidth = width;
                 ctx.lineCap = "round";
@@ -110,7 +114,7 @@ class ClockCard extends HTMLElement {
     // The height of your card. Home Assistant uses this to automatically
     // distribute all cards over the available columns.
     getCardSize() {
-        return 10;
+        return 3;
     }
 }
 
