@@ -11,8 +11,12 @@ class ClockCard extends HTMLElement {
             this.content.style.alignItems = "center";
             this.content.style.alignContent = "center";
             this.content.style.justifyContent = "center";
+            this.content.style.flexDirection = "column";
             this.content.style.padding = "5px";
-            this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>`;
+            const current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            var formatted_timezone = (config.time_zone ? config.time_zone : current_tz).replace('_', " ");
+            var timezone_html = config.show_timezone ? `<p style="font-size:20px">${formatted_timezone}</p>` : "";
+            this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>${timezone_html}`;
             card.appendChild(this.content);
             this.appendChild(card);
             var canvas = this.content.children[0];
