@@ -15,7 +15,11 @@ class ClockCard extends HTMLElement {
             this.content.style.padding = "5px";
             const current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
             var formatted_timezone = (config.time_zone ? config.time_zone : current_tz).replace('_', " ");
-            var timezone_html = config.show_timezone ? `<p style="font-size:20px">${formatted_timezone}</p>` : "";
+            var timezone_html = config.show_continent || config.show_city ? `<p style="font-size:20px">
+            ${config.show_continent ? 
+                (config.show_city ? formatted_timezone : formatted_timezone.substr(0, formatted_timezone.indexOf("/"))) :
+                (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "")}
+            </p>` : "";
             this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>${timezone_html}`;
             card.appendChild(this.content);
             this.appendChild(card);
