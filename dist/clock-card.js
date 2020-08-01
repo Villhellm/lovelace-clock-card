@@ -1,9 +1,8 @@
-var config;
 class ClockCard extends HTMLElement {
 
     set hass(hass) {
         if (!this.content) {
-            config = this.config;
+            var config = this.config;
             var clock_size = config.size ? config.size : 300;
             const card = document.createElement('ha-card');
             this.content = document.createElement('div');
@@ -119,8 +118,6 @@ class ClockCard extends HTMLElement {
         this.config = config;
     }
 
-    // The height of your card. Home Assistant uses this to automatically
-    // distribute all cards over the available columns.
     getCardSize() {
         return 3;
     }
