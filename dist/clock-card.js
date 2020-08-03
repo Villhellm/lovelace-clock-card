@@ -14,11 +14,16 @@ class ClockCard extends HTMLElement {
             this.content.style.padding = "5px";
             const current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
             var formatted_timezone = (config.time_zone ? config.time_zone : current_tz).replace('_', " ");
-            var timezone_html = config.show_continent || config.show_city ? `<p style="font-size:20px">
-            ${config.show_continent ? 
+            var caption;
+            if(config.caption){
+                caption = config.caption;
+            }
+            else{
+                caption = config.show_continent ? 
                 (config.show_city ? formatted_timezone : formatted_timezone.substr(0, formatted_timezone.indexOf("/"))) :
-                (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "")}
-            </p>` : "";
+                (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "");
+            }
+            var timezone_html = caption ? `<p style="font-size:20px">${caption}</p>` : "";
             this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>${timezone_html}`;
             card.appendChild(this.content);
             this.appendChild(card);
@@ -37,7 +42,6 @@ class ClockCard extends HTMLElement {
             }
 
             function drawFace(ctx, radius) {
-                var grad;
                 ctx.beginPath();
                 ctx.arc(0, 0, radius, 0, 2 * Math.PI);
                 ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-background-color');

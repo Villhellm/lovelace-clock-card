@@ -12,6 +12,8 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
 | disable_seconds | boolean | **Optional** | Disable the seconds hand
 | show_continent | boolean | **Optional** | Display the timezone continent beneath the clock
 | show_city | boolean | **Optional** | Display the timezone city beneath the clock
+| caption | name | **Optional** | Caption to display under the clock. This will override both show_city and show_continent
+
 ## Example Configuration
 
 ```yaml
