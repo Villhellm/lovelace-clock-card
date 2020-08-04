@@ -1,3 +1,55 @@
+function leadingZero(numberString) {
+    if (numberString.toString().length == 1) {
+        return '0' + numberString;
+    }
+    else {
+        return numberString;
+    }
+}
+
+Date.prototype.format = function (formatString) {
+    var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    formatString = formatString.replace(/hh/g, leadingZero(this.getHours()));
+    formatString = formatString.replace(/h/g, this.getHours());
+    formatString = formatString.replace(/mm/g, leadingZero(this.getMinutes()));
+    formatString = formatString.replace(/m/g, this.getMinutes());
+    formatString = formatString.replace(/ss/g, leadingZero(this.getSeconds()));
+    formatString = formatString.replace(/s/g, this.getSeconds());
+    formatString = formatString.replace(/YYYY/g, this.getFullYear());
+    formatString = formatString.replace(/YY/g, this.getFullYear().toString().substr(2));
+    formatString = formatString.replace(/MMMM/g, 'ZZZZ');
+    formatString = formatString.replace(/MMM/g, 'ZZZ');
+    formatString = formatString.replace(/MM/g, leadingZero(this.getMonth() + 1));
+    formatString = formatString.replace(/M/g, this.getMonth() + 1);
+    formatString = formatString.replace(/DDDD/g, 'XXXX');
+    formatString = formatString.replace(/DDD/g, 'XXX');
+    formatString = formatString.replace(/DD/g, leadingZero(this.getDate()));
+    formatString = formatString.replace(/D/g, this.getDate());
+
+    formatString = formatString.replace(/ZZZZ/g, monthNames[this.getMonth() + 12]);
+    formatString = formatString.replace(/ZZZ/g, monthNames[this.getMonth()]);
+    formatString = formatString.replace(/XXXX/g, dayNames[this.getDay() + 7]);
+    formatString = formatString.replace(/XXX/g, dayNames[this.getDay()]);
+    return formatString;
+};
+
+function timezoneTime(date, time_zone) {
+
+    // suppose the date is 12:00 UTC
+    var indate = new Date(date.toLocaleString('en-US', {
+        timeZone: time_zone
+    }));
+
+    // then invdate will be 07:00 in Toronto
+    // and the diff is 5 hours
+    var diff = date.getTime() - indate.getTime();
+
+    // so 12:00 in Toronto is 17:00 UTC
+    return new Date(date.getTime() + diff);
+}
+
+
 class ClockCard extends HTMLElement {
 
     set hass(hass) {
@@ -15,19 +67,22 @@ class ClockCard extends HTMLElement {
             const current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
             var formatted_timezone = (config.time_zone ? config.time_zone : current_tz).replace('_', " ");
             var caption;
-            if(config.caption){
+            if (config.caption) {
                 caption = config.caption;
             }
-            else{
-                caption = config.show_continent ? 
-                (config.show_city ? formatted_timezone : formatted_timezone.substr(0, formatted_timezone.indexOf("/"))) :
-                (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "");
+            else {
+                caption = config.show_continent ?
+                    (config.show_city ? formatted_timezone : formatted_timezone.substr(0, formatted_timezone.indexOf("/"))) :
+                    (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "");
             }
-            var timezone_html = caption ? `<p style="font-size:20px">${caption}</p>` : "";
+            var timezone_html = caption ? `<p id="time_caption" style="font-size:20px">${caption}</p>` : "";
+            var now = config.time_zone ? timezoneTime(new Date(), config.time_zone) : new Date();
+            timezone_html = config.display_date ? timezone_html + `<p id="display_date" style="font-size:20px">${now.format(config.display_date)}</p>` : timezone_html;
             this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>${timezone_html}`;
             card.appendChild(this.content);
             this.appendChild(card);
             var canvas = this.content.children[0];
+            var dateTimeP = config.display_date ? caption ? this.content.children[2] : this.content[1] : null;
             var ctx = canvas.getContext("2d");
             var radius = canvas.height / 2;
             ctx.translate(radius, radius);
@@ -38,7 +93,7 @@ class ClockCard extends HTMLElement {
             function drawClock() {
                 drawFace(ctx, radius);
                 drawNumbers(ctx, radius);
-                drawTime(ctx, radius);
+                drawTime(ctx, radius, dateTimeP);
             }
 
             function drawFace(ctx, radius) {
@@ -74,7 +129,7 @@ class ClockCard extends HTMLElement {
                 }
             }
 
-            function drawTime(ctx, radius) {
+            function drawTime(ctx, radius, dateTimeP) {
                 var now = new Date();
                 var local_hour = now.getHours();
                 if (config && config.time_zone) {
@@ -84,6 +139,10 @@ class ClockCard extends HTMLElement {
                     catch{
                         console.log("Analog Clock: Invalid timezone")
                     }
+                }
+                if (dateTimeP != null) {
+                    var now = config.time_zone ? timezoneTime(new Date(), config.time_zone) : new Date();
+                    dateTimeP.innerHTML = now.format(config.display_date);
                 }
                 var hour = local_hour;
                 var minute = now.getMinutes();
@@ -117,6 +176,7 @@ class ClockCard extends HTMLElement {
             }
         }
     }
+
 
     setConfig(config) {
         this.config = config;
