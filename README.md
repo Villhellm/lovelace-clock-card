@@ -19,12 +19,15 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
 ## Display date string format options
 | String | Returns
 | ---- | ----
-| hh | current hour with leading zero eg: `04`
-| h | current hour eg: `4`
+| a | AM/PM
+| hh | current 12/hr hour with leading zero eg: `04`
+| h | current 12/hr hour eg: `4`
 | mm | current minute with leading zero eg: `09`
 | m | current minute eg: `9`
 | ss | current second with leading zero eg: `07`
 | s | current second eg: `7`
+| HH | current 24/hr hour with leading zero eg: `04`
+| H | current 24/hr hour eg: `16`
 | YYYY | current full year eg: `2020`
 | YY | current abbreviated year eg: `20` 
 | MMMM | current month name eg: `August`

@@ -10,12 +10,17 @@ function leadingZero(numberString) {
 Date.prototype.format = function (formatString) {
     var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    formatString = formatString.replace(/hh/g, leadingZero(this.getHours()));
-    formatString = formatString.replace(/h/g, this.getHours());
+    var twlv = this.getHours() == 0 ? 12 : this.getHours() > 12 ? this.getHours() - 12 : this.getHours();
+    var ampm = this.getHours() >= 12 ? "PM" : "AM";
+
+    formatString = formatString.replace(/hh/g, leadingZero(twlv));
+    formatString = formatString.replace(/h/g, twlv);
     formatString = formatString.replace(/mm/g, leadingZero(this.getMinutes()));
     formatString = formatString.replace(/m/g, this.getMinutes());
     formatString = formatString.replace(/ss/g, leadingZero(this.getSeconds()));
     formatString = formatString.replace(/s/g, this.getSeconds());
+    formatString = formatString.replace(/HH/g, leadingZero(this.getHours()));
+    formatString = formatString.replace(/H/g, this.getHours());
     formatString = formatString.replace(/YYYY/g, this.getFullYear());
     formatString = formatString.replace(/YY/g, this.getFullYear().toString().substr(2));
     formatString = formatString.replace(/MMMM/g, 'ZZZZ');
@@ -27,6 +32,7 @@ Date.prototype.format = function (formatString) {
     formatString = formatString.replace(/DD/g, leadingZero(this.getDate()));
     formatString = formatString.replace(/D/g, this.getDate());
 
+    formatString = formatString.replace(/a/g, ampm);
     formatString = formatString.replace(/ZZZZ/g, monthNames[this.getMonth() + 12]);
     formatString = formatString.replace(/ZZZ/g, monthNames[this.getMonth()]);
     formatString = formatString.replace(/XXXX/g, dayNames[this.getDay() + 7]);
