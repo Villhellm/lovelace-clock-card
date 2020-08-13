@@ -76,7 +76,7 @@ class ClockCard extends HTMLElement {
             card.appendChild(this.content);
             this.appendChild(card);
             var canvas = this.content.children[0];
-            var dateTimeP = config.display_date ? caption ? this.content.children[2] : this.content[1] : null;
+            var dateTimeP = config.display_date ? caption ? this.content.children[2] : this.content.children[1] : null;
             var ctx = canvas.getContext("2d");
             var radius = canvas.height / 2;
             ctx.translate(radius, radius);
