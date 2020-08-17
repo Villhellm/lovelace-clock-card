@@ -14,6 +14,7 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
 | show_city | boolean | **Optional** | Display the timezone city beneath the clock
 | caption | string | **Optional** | Caption to display under the clock. This will override both show_city and show_continent
 | display_date | string | **Optional** | Display the current Date object. See below for format options
+| theme | object | **Optional** | Change the theme colors manually. Theme options below
 
 
 ## Display date string format options
@@ -39,6 +40,16 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
 | DD | current day with leading zero eg: `06`
 | D | current day eg: `6`
 
+## Theme options
+All theme options can be set with a CSS valid color option.
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| background | string | **Optional** | Clock face background color
+| hands | string | **Optional** | Color of the hands and clock border (if `border` is not defined)
+| numbers | string | **Optional** | Color of the numbers
+| border | string | **Optional** | Color of the clock face border
+
 ## Example Configuration
 
 ```yaml
@@ -48,6 +59,11 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
   disable_seconds: true #OPTIONAL
   caption: "Corporate"
   display_date: "MM/DD/YY"
+  theme:
+    background: black
+    hands: orange
+    numbers: white
+    border: grey
 ```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
