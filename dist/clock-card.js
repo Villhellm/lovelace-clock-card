@@ -49,6 +49,7 @@ class ClockCard extends HTMLElement {
     set hass(hass) {
         if (!this.content) {
             var config = this.config;
+            var theme = config.theme ? config.theme : {};
             var clock_size = config.size ? config.size : 300;
             const card = document.createElement('ha-card');
             this.content = document.createElement('div');
@@ -93,9 +94,9 @@ class ClockCard extends HTMLElement {
             function drawFace(ctx, radius) {
                 ctx.beginPath();
                 ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-background-color');
+                ctx.fillStyle = theme.background ? theme.background : getComputedStyle(document.documentElement).getPropertyValue('--primary-background-color');
                 ctx.fill();
-                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+                ctx.strokeStyle = theme.border ? theme.border : theme.hands ? theme.hands : getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
                 ctx.lineWidth = radius * 0.03;
                 ctx.stroke();
                 ctx.beginPath();
@@ -112,7 +113,7 @@ class ClockCard extends HTMLElement {
                 ctx.textAlign = "center";
                 for (num = 1; num < 13; num++) {
                     ang = num * Math.PI / 6;
-                    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color');
+                    ctx.fillStyle = theme.numbers ? theme.numbers : getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color');
                     ctx.rotate(ang);
                     ctx.translate(0, -radius * 0.85);
                     ctx.rotate(-ang);
@@ -158,7 +159,7 @@ class ClockCard extends HTMLElement {
             }
 
             function drawHand(ctx, pos, length, width) {
-                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+                ctx.strokeStyle = theme.hands ? theme.hands : getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
                 ctx.beginPath();
                 ctx.lineWidth = width;
                 ctx.lineCap = "round";
