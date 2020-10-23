@@ -9,7 +9,7 @@ A simple analog clock card for Home Assistant. Colors are based on your current 
 | type | string | **Required** | "custom:clock-card"
 | time_zone | string | **Optional** | The timezone you would like to display. If ommited your current device time will be used. Must be a valid [TZ database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 | size | number | **Optional** | The size of the clock in px. Default is 300
-| font_size | number |**Optional** | The size of the date string in px. Default is 20
+| font_size | number | **Optional** | The size of the date string in px. Default is 20
 | disable_seconds | boolean | **Optional** | Disable the seconds hand
 | show_continent | boolean | **Optional** | Display the timezone continent beneath the clock
 | show_city | boolean | **Optional** | Display the timezone city beneath the clock
