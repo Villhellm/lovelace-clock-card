@@ -51,6 +51,7 @@ class ClockCard extends HTMLElement {
             var config = this.config;
             var theme = config.theme ? config.theme : {};
             var clock_size = config.size ? config.size : 300;
+            var font_size = config.font_size ? config.font_size : 20;
             const card = document.createElement('ha-card');
             this.content = document.createElement('div');
             this.content.style.display = "flex";
@@ -70,9 +71,9 @@ class ClockCard extends HTMLElement {
                     (config.show_city ? formatted_timezone : formatted_timezone.substr(0, formatted_timezone.indexOf("/"))) :
                     (config.show_city ? formatted_timezone.substr(formatted_timezone.indexOf("/") + 1) : "");
             }
-            var timezone_html = caption ? `<p id="time_caption" style="font-size:20px">${caption}</p>` : "";
+            var timezone_html = caption ? `<p id="time_caption" style="font-size:${font_size}px">${caption}</p>` : "";
             var now = config.time_zone ? timezoneTime(config.time_zone) : new Date();
-            timezone_html = config.display_date ? timezone_html + `<p id="display_date" style="font-size:20px">${now.format(config.display_date)}</p>` : timezone_html;
+            timezone_html = config.display_date ? timezone_html + `<p id="display_date" style="font-size:${font_size}px">${now.format(config.display_date)}</p>` : timezone_html;
             this.content.innerHTML = `<canvas width="${clock_size}px" height="${clock_size}px"></canvas>${timezone_html}`;
             card.appendChild(this.content);
             this.appendChild(card);
